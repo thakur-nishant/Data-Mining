@@ -68,8 +68,16 @@ def write_2_file(trainX, trainY, testX, testY):
     f.close()
 
 
-def letter_2_digit_convert(str):
+def letter_2_digit_convert(letters):
+    letters = letters.upper()
     a2z = string.ascii_uppercase
+
+    converted_digits = []
+
+    for letter in letters:
+        converted_digits.append(a2z.index(letter) + 1)
+
+    return converted_digits
 
 def run():
     filename = "trainDataXY.txt"
@@ -87,6 +95,8 @@ def run():
     # print("TestY=",len(testY),testY)
 
     write_2_file(trainX, trainY, testX, testY)
+
+    print(letter_2_digit_convert('ACFG'))
 
 
 if __name__ == "__main__":
