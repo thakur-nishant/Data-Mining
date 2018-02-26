@@ -2,7 +2,7 @@ import string
 
 '''
 filename: char_string specifing the data file to read. For example, 'ATNT_face_image.txt'
-  class_ids:  array that contains the classes to be pick. For example: (3, 5, 8, 9)
+  class_ids:  array/list that contains the classes to be pick. For example: (3, 5, 8, 9)
   Returns: an multi-dimension array or a file, containing the data (both attribute vectors and class labels)
            of the selected classes
   We use this subroutine to pick a small part of the data to do experiments. For example for handwrittenletter data,
@@ -60,11 +60,27 @@ def splitData2TestTrain(data, number_per_class,  test_instances):
 def write_2_file(trainX, trainY, testX, testY):
     trainX.insert(0 , trainY)
     testX.insert(0, testY)
+
+    train = ""
+    test = ""
+    for i in range(len(trainX)):
+        string = ""
+        for j in trainX[i]:
+            string += str(j) + ","
+        train += string[:-1] + "\n"
+
     with open('TrainingData.txt', 'w') as f:
-        f.write(str(trainX))
+        f.write(train)
     f.close()
+
+    for i in range(len(testX)):
+        string = ""
+        for j in testX[i]:
+            string += str(j) + ","
+        test += string[:-1] + "\n"
+
     with open('TestingData.txt', 'w') as f:
-        f.write(str(testX))
+        f.write(test)
     f.close()
 
 
