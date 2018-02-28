@@ -5,8 +5,14 @@ import numpy as np
 import DataHandler as dh
 
 
+# Program initialization and split data into training and testing dataset
+# We use DataHandler module to split the data as required.
 def start():
-    dh.run("trainDataXY.txt")
+    # dh.run("trainDataXY.txt")
+    filename = "HandWrittenLetters.txt"
+    class_ids = [1, 2, 3, 4, 5]
+
+    format_data(filename,class_ids)
 
     train = []
     test = []
@@ -25,6 +31,18 @@ def start():
     kNN(k, train, test)
 
 
+def format_data(filename, class_ids):
+    data = dh.pickDataClass(filename, class_ids)
+
+    number_per_class = data[0].count(class_ids[0])
+    test_instances = [30, 38]
+    trainX, trainY, testX, testY = dh.splitData2TestTrain(data, number_per_class, test_instances)
+
+    dh.write_2_file(trainX, trainY, testX, testY)
+
+
+# Used to run feed data to the classifier i.e 'classify' function and calculate the accuracy
+# k: number of neighbour to be selected, train: training data, test: testing data
 def kNN(k, train, test):
 
     trainY = train[0]
@@ -45,7 +63,7 @@ def kNN(k, train, test):
     print("Accuracy =", count/len(testX))
 
 
-
+# Used to classify the given unknown data point to a label/class
 # X: Training data, Y: Training Class Lables, x: sample unknown data
 def classify(X, Y, x, k):
     data = np.array(X).transpose()
@@ -59,11 +77,13 @@ def classify(X, Y, x, k):
     return majority_label
 
 
-def majority_element(num_list):
+# Used to select the label/class that has majority in the list
+# label_list: List of k selected nearest neighbour
+def majority_element(label_list):
     index, counter = 0, 1
 
-    for i in range(1, len(num_list)):
-        if num_list[index] == num_list[i]:
+    for i in range(1, len(label_list)):
+        if label_list[index] == label_list[i]:
             counter += 1
         else:
             counter -= 1
@@ -71,7 +91,7 @@ def majority_element(num_list):
                 index = i
                 counter = 1
 
-    return num_list[index]
+    return label_list[index]
 
 
 def euclidean_distance(x, y):
@@ -80,7 +100,6 @@ def euclidean_distance(x, y):
         sum += (int(x[i]) - int(y[i]))**2
 
     return sqrt(sum)
-    # return sqrt(sum(pow(a - b, 2) for a, b in zip(x, y)))
 
 
 if __name__ == "__main__":

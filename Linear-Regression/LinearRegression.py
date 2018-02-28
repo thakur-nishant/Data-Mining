@@ -24,12 +24,12 @@ A_test = np.ones((1,N_test))      # N_test  : number of test instance
 Xtrain_padding = np.row_stack((Xtrain,A_train))
 Xtest_padding = np.row_stack((Xtest,A_test))
 
-print(Xtrain_padding)
-print(Xtest_padding)
+# print(Xtrain_padding)
+# print(Xtest_padding)
 
 '''computing the regression coefficients'''
-B_padding = np.dot(np.linalg.pinv(Xtrain_padding.T), Ytrain.T)   # (XX')^{-1} X  * Y'  #Ytrain : indicator matrix
-Ytest_padding = np.dot(B_padding.T,Xtest_padding)
+B_padding = np.dot(np.linalg.pinv(Xtrain_padding.transpose()), Ytrain.transpose())   # (XX')^{-1} X  * Y'  #Ytrain : indicator matrix
+Ytest_padding = np.dot(B_padding.transpose(),Xtest_padding)
 Ytest_padding_argmax = np.argmax(Ytest_padding,axis=0)+1
 err_test_padding = Ytest - Ytest_padding_argmax
 TestingAccuracy_padding = (1-np.nonzero(err_test_padding)[0].size/len(err_test_padding))*100
