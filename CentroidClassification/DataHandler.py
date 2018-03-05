@@ -104,6 +104,8 @@ def letter_2_digit_convert(letters):
 
     return converted_digits
 
+
+# This is how you can use the Data Handler to create Train and test dataset and splitting the data.
 def run(filename):
     # filename = "trainDataXY.txt"
     class_ids = [1, 3, 5]
