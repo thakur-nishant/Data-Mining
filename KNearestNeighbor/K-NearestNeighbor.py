@@ -4,14 +4,16 @@ import numpy as np
 
 import DataHandler as dh
 
+import random
+
 
 # Program initialization and split data into training and testing dataset
 # We use DataHandler module to split the data as required.
 def start():
-    # dh.run("trainDataXY.txt")
     filename = "HandWrittenLetters.txt"
-    class_ids = [1, 2, 3, 4, 5]
-
+    # class_ids = [1, 2, 3, 4, 5]
+    class_ids = random.sample(range(1,27), 5)
+    print(class_ids)
     format_data(filename,class_ids)
 
     train = []
@@ -28,9 +30,14 @@ def start():
 
     k = input("Enter value of K: ")
 
-    kNN(k, train, test)
+    cross_validation(5, k, train)
+
+    accuracy = kNN(k, train, test)
+    print("Overall Accuracy: ", accuracy)
 
 
+# This function is used for data formatting using the DataHandler
+# filename: name of the file to perform data splitting, class_ids: list of selected class to test.
 def format_data(filename, class_ids):
     data = dh.pickDataClass(filename, class_ids)
 
@@ -39,6 +46,29 @@ def format_data(filename, class_ids):
     trainX, trainY, testX, testY = dh.splitData2TestTrain(data, number_per_class, test_instances)
 
     dh.write_2_file(trainX, trainY, testX, testY)
+
+
+# This function is used to perform K-fold cross validation
+# k_fold: number of splits for cross-validation, k: number of neighbour to be selected, train: data for CV
+def cross_validation(k_fold, k, data):
+    data = np.array(data).transpose().tolist()
+    random.shuffle(data)
+    n = len(data)
+    len_k = n // k_fold
+    accuracy_list = []
+    for i in range(k_fold):
+        start = i * len_k
+        end = (i + 1) * len_k
+        test = data[start:end]
+        train = [x for x in data if x not in test]
+
+        train = np.array(train).transpose().tolist()
+        test = np.array(test).transpose().tolist()
+        accuracy = kNN(k, train, test)
+        accuracy_list.append(accuracy)
+        print("Iterantion", i+1, "accuracy:", accuracy)
+
+    print("Average accuracy:", sum(accuracy_list)/len(accuracy_list))
 
 
 # Used to run feed data to the classifier i.e 'classify' function and calculate the accuracy
@@ -60,7 +90,7 @@ def kNN(k, train, test):
         if predict == testY[i]:
             count += 1
 
-    print("Accuracy =", count/len(testX))
+    return count/len(testX)
 
 
 # Used to classify the given unknown data point to a label/class
@@ -94,6 +124,8 @@ def majority_element(label_list):
     return label_list[index]
 
 
+# Function to calculate the Euclidean distance between 2 points
+# x & y : vectors representing 2 points
 def euclidean_distance(x, y):
     sum = 0
     for i in range(len(x)):

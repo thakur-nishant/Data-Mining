@@ -4,6 +4,8 @@ import numpy as np
 
 import DataHandler as dh
 
+import random
+
 def centroid_classifier(train, test):
     trainX = train[1:]
     trainY = train[0]
@@ -22,7 +24,7 @@ def centroid_classifier(train, test):
         if predict == testY[i]:
             count += 1
 
-    print("Accuracy =", count/len(testX))
+    return count/len(testX)
 
 
 def centroid_calculate(X, Y):
@@ -85,11 +87,34 @@ def format_data(filename, class_ids):
     dh.write_2_file(trainX, trainY, testX, testY)
 
 
+# This function is used to perform K-fold cross validation
+# k_fold: number of splits for cross-validation, k: number of neighbour to be selected, train: data for CV
+def cross_validation(k_fold, data):
+    data = np.array(data).transpose().tolist()
+    random.shuffle(data)
+    n = len(data)
+    len_k = n // k_fold
+    accuracy_list = []
+    for i in range(k_fold):
+        start = i * len_k
+        end = (i + 1) * len_k
+        test = data[start:end]
+        train = [x for x in data if x not in test]
+
+        train = np.array(train).transpose().tolist()
+        test = np.array(test).transpose().tolist()
+        accuracy = centroid_classifier(train, test)
+        accuracy_list.append(accuracy)
+        print("Iterantion", i+1, "accuracy:", accuracy)
+
+    print("Average accuracy:", sum(accuracy_list)/len(accuracy_list))
+
 
 def start():
     filename = "HandWrittenLetters.txt"
-    class_ids = [1, 2, 3, 4, 5]
-
+    # class_ids = [1,2,3,4,5]
+    class_ids = random.sample(range(1,27), 5)
+    print(class_ids)
     format_data(filename,class_ids)
 
     train = []
@@ -104,7 +129,10 @@ def start():
             data = line[:-1].split(',')
             test.append(data)
 
-    centroid_classifier(train, test)
+    cross_validation(5, train)
+
+    accuracy = centroid_classifier(train, test)
+    print("Overall Accuracy: ", accuracy)
 
 
 if __name__ == "__main__":
