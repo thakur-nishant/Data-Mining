@@ -77,11 +77,10 @@ def euclidean_distance(x, y):
     return sqrt(sum)
 
 
-def format_data(filename, class_ids):
+def format_data(filename, class_ids, test_instances):
     data = dh.pickDataClass(filename, class_ids)
 
     number_per_class = data[0].count(class_ids[0])
-    test_instances = [30, 38]
     trainX, trainY, testX, testY = dh.splitData2TestTrain(data, number_per_class, test_instances)
 
     dh.write_2_file(trainX, trainY, testX, testY)
@@ -110,12 +109,9 @@ def cross_validation(k_fold, data):
     print("Average accuracy:", sum(accuracy_list)/len(accuracy_list))
 
 
-def start():
-    filename = "HandWrittenLetters.txt"
-    # class_ids = [1,2,3,4,5]
-    class_ids = random.sample(range(1,27), 5)
-    print(class_ids)
-    format_data(filename,class_ids)
+def start(filename, class_ids, test_instances):
+
+    format_data(filename,class_ids, test_instances)
 
     train = []
     test = []
@@ -132,8 +128,22 @@ def start():
     cross_validation(5, train)
 
     accuracy = centroid_classifier(train, test)
-    print("Overall Accuracy: ", accuracy)
+    print("Overall Accuracy:", accuracy)
+    return accuracy
 
 
 if __name__ == "__main__":
-    start()
+
+    # filename = input("Enter filename: ")
+    filename = "HandWrittenLetters.txt"
+
+    # class_ids = [1,2,3,4,5,6,7,8,9,10]
+    # class_ids = random.sample(range(1, 27), 5)
+    class_ids = [x for x in range(1, 6)]
+    print("For class:", class_ids)
+    test_instances = [30,38]
+
+    start(filename, class_ids, test_instances)
+
+
+
