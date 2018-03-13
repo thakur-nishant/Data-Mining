@@ -145,5 +145,3 @@ if __name__ == "__main__":
 
     start(filename, class_ids, test_instances)
 
-
-
