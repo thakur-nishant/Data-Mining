@@ -7,15 +7,8 @@ import random
 def linear_regression(train, test):
     Xtrain = np.array(train[1:],dtype='float')
     Xtest = np.array(test[1:],dtype='float')
-    Ytrain = []
-    for i in range(len(train[0])):
-        x = []
-        for j in range(26):
-            if j == int(train[0][i])-1:
-                x.append(1)
-            else:
-                x.append(0)
-        Ytrain.append(x)
+    #convert class ids to class indicator representation
+    Ytrain = [[1 if j == int(train[0][i])-1 else 0 for j in range(26)] for i in range(len(train[0]))]
 
     Ytrain = np.array(Ytrain,dtype='float')
     Ytest = np.array(test[0], dtype='float')
