@@ -7,21 +7,31 @@ import random
 def linear_regression(train, test):
     Xtrain = np.array(train[1:],dtype='float')
     Xtest = np.array(test[1:],dtype='float')
-    Ytrain = np.array(train[0],dtype='float')
-    Ytest = np.array(test[0],dtype='float')
+    Ytrain = []
+    for i in range(len(train[0])):
+        x = []
+        for j in range(26):
+            if j == int(train[0][i])-1:
+                x.append(1)
+            else:
+                x.append(0)
+        Ytrain.append(x)
+
+    Ytrain = np.array(Ytrain,dtype='float')
+    Ytest = np.array(test[0], dtype='float')
 
     N_train = len(Xtrain[0])
     N_test = len(Xtest[0])
 
-    A_train = np.ones((1, N_train))    # N_train : number of training instance
-    A_test = np.ones((1, N_test))      # N_test  : number of test instance
+    A_train = np.ones((1, N_train),dtype='float')    # N_train : number of training instance
+    A_test = np.ones((1, N_test),dtype='float')      # N_test  : number of test instance
     Xtrain_padding = np.row_stack((Xtrain, A_train))
     Xtest_padding = np.row_stack((Xtest, A_test))
 
 
     '''computing the regression coefficients'''
     B = np.linalg.pinv(Xtrain_padding.T)
-    B_padding = np.dot(B, Ytrain.T)   # (XX')^{-1} X  * Y'  #Ytrain : indicator matrix
+    B_padding = np.dot(B, Ytrain)   # (XX')^{-1} X  * Y'  #Ytrain : indicator matrix
     Ytest_padding = np.dot(B_padding.T, Xtest_padding)
     Ytest_padding_argmax = np.argmax(Ytest_padding, axis=0)+1
     err_test_padding = Ytest - Ytest_padding_argmax
@@ -55,7 +65,7 @@ def cross_validation(k_fold, data):
         test = np.array(test).transpose().tolist()
         accuracy = linear_regression(train, test)
         accuracy_list.append(accuracy)
-        print("Iterantion", i+1, "accuracy:", accuracy)
+        print("Fold", i+1, "accuracy:", accuracy)
 
     print("Average accuracy:", sum(accuracy_list)/len(accuracy_list))
 
@@ -90,9 +100,8 @@ if __name__ == "__main__":
     # filename = input("Enter filename: ")
     filename = "HandWrittenLetters.txt"
 
-    # class_ids = [1,2,3,4,5,6,7,8,9,10]
     # class_ids = random.sample(range(1, 27), 5)
-    class_ids = [x for x in range(1, 6)]
+    class_ids = [x for x in range(1,6)]
     print("For class:", class_ids)
     test_instances = [30,38]
 
