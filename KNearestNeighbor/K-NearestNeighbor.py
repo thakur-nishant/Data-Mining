@@ -129,7 +129,7 @@ def majority_element(label_list):
 def euclidean_distance(x, y):
     sum = 0
     for i in range(len(x)):
-        sum += (int(x[i]) - int(y[i]))**2
+        sum += (float(x[i]) - float(y[i]))**2
 
     return sqrt(sum)
 

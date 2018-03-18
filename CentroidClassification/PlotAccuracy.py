@@ -8,8 +8,8 @@ def run():
     # filename = input("Enter filename: ")
     filename = "HandWrittenLetters.txt"
 
-    # class_ids = [1,2,3,4,5,6,7,8,9,10]
-    class_ids = random.sample(range(1, 27), 10)
+    class_ids = [1,2,3,4,5,6,7,8,9,10]
+    # class_ids = random.sample(range(1, 27), 10)
     # class_ids = [x for x in range(11, 21)]
     print("For class:", class_ids)
 

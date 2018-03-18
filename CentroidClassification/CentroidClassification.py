@@ -6,6 +6,8 @@ import DataHandler as dh
 
 import random
 
+import matplotlib.pyplot as plt
+
 def centroid_classifier(train, test):
     trainX = train[1:]
     trainY = train[0]
@@ -16,11 +18,10 @@ def centroid_classifier(train, test):
     testX = np.array(testX).transpose()
 
     centroid = centroid_calculate(trainX,trainY)
-
     count = 0
     for i in range(len(testX)):
-        predict = classify(centroid[1], centroid[0], testX[i])
 
+        predict = classify(centroid[1], centroid[0], testX[i])
         if predict == testY[i]:
             count += 1
 
@@ -61,6 +62,7 @@ def calculate_average(data):
 
 def classify(X, Y, x):
     distance = []
+
     for mean in X:
         distance.append(euclidean_distance(mean, x))
 
@@ -72,7 +74,7 @@ def classify(X, Y, x):
 def euclidean_distance(x, y):
     sum = 0
     for i in range(len(x)):
-        sum += (int(x[i]) - int(y[i]))**2
+        sum += (float(x[i]) - float(y[i]))**2
 
     return sqrt(sum)
 
@@ -87,7 +89,7 @@ def format_data(filename, class_ids, test_instances):
 
 
 # This function is used to perform K-fold cross validation
-# k_fold: number of splits for cross-validation, k: number of neighbour to be selected, train: data for CV
+# k_fold: number of splits for cross-validation, train: data for CV
 def cross_validation(k_fold, data):
     data = np.array(data).transpose().tolist()
     random.shuffle(data)
@@ -139,7 +141,7 @@ if __name__ == "__main__":
 
     # class_ids = [1,2,3,4,5,6,7,8,9,10]
     # class_ids = random.sample(range(1, 27), 5)
-    class_ids = [x for x in range(1, 6)]
+    class_ids = [x for x in range(1,11)]
     print("For class:", class_ids)
     test_instances = [30,38]
 
