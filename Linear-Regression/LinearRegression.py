@@ -63,7 +63,7 @@ def cross_validation(k_fold, data):
     print("Average accuracy:", sum(accuracy_list)/len(accuracy_list))
 
 
-def start(filename, class_ids, test_instances):
+def start(filename, class_ids, test_instances, fold):
 
     format_data(filename,class_ids, test_instances)
 
@@ -79,7 +79,7 @@ def start(filename, class_ids, test_instances):
             data = line[:-1].split(',')
             test.append(data)
 
-    cross_validation(5, train)
+    cross_validation(fold, train)
 
     accuracy = linear_regression(train, test)
     print("\n###############################")
@@ -98,4 +98,4 @@ if __name__ == "__main__":
     print("For class:", class_ids)
     test_instances = [30,38]
 
-    start(filename, class_ids, test_instances)
+    start(filename, class_ids, test_instances, fold = 5)
