@@ -22,7 +22,7 @@ def pickDataClass(filename, class_ids):
 
             for i in range(len(raw_data)):
                 if int(lables[i]) in class_ids:
-                    row.append(int(raw_data[i]))
+                    row.append(float(raw_data[i]))
             data.append(row)
 
         return data

@@ -10,7 +10,7 @@ import random
 # Program initialization and split data into training and testing dataset
 # We use DataHandler module to split the data as required.
 def start(filename, class_ids, test_instances, fold=5):
-    print("For class id:",class_ids)
+    # print("For class id:",class_ids)
     format_data(filename,class_ids, test_instances)
 
     train = []
@@ -27,7 +27,7 @@ def start(filename, class_ids, test_instances, fold=5):
 
     k = input("Enter value of K: ")
 
-    cross_validation(fold, k, train)
+    # cross_validation(fold, k, train)
 
     accuracy = kNN(k, train, test)
     print("Overall Accuracy: ", accuracy)
@@ -79,13 +79,17 @@ def kNN(k, train, test):
 
     testX = np.array(testX).transpose()
 
+    output = ''
     count = 0
     for i in range(len(testX)):
         predict = classify(trainX, trainY, testX[i], k)
-
         if predict == testY[i]:
             count += 1
 
+        output = output + str(predict) + ','
+        with open('KNNResult.txt', 'w') as f:
+            f.write(output[:-1])
+        f.close()
     return count/len(testX)
 
 
@@ -132,7 +136,10 @@ def euclidean_distance(x, y):
 
 if __name__ == "__main__":
     filename = "HandWrittenLetters.txt"
-    class_ids = [i for i in range(13, 23)]
-    test_instances = [30, 38]
+    student_id = [4, 5, 9, 1]                      # Student ID: 1001544591 ----- [4,5,9,1]
+    name_id = dh.letter_2_digit_convert('NTUR')    # Nishant Thakur         ----- [N,T,U,R] -> As 'T' was repeated replace it with 'U'
+    class_ids = student_id + name_id               # [4, 5, 9, 1, 14, 20, 21, 18]
+    print("For class:", class_ids)
+    test_instances = [0, 9]
 
     start(filename, class_ids, test_instances, fold=5)

@@ -25,15 +25,17 @@ def svm_classifier(train,test):
     X_test = np.array(test[1:]).transpose().tolist()
     Y_test = np.array(test[0])
 
-    # count = 0
-    # for i in range(len(X_test)):
-    #     result = clf.predict([X_test[i]])
-    #     if result[0] == Y_test[i]:
-    #         count += 1
-    # return count / len(Y_test)
-
-    # To compute accuracy using sklearn liabrary
-    return clf.score(X_test, Y_test)
+    output = ''
+    count = 0
+    for i in range(len(X_test)):
+        result = clf.predict([X_test[i]])
+        if result[0] == Y_test[i]:
+            count += 1
+        output = output + str(result[0]) + ','
+    with open('SVMResult.txt', 'w') as f:
+        f.write(output[:-1])
+    f.close()
+    return count / len(Y_test)
 
 
 # This function is used to perform K-fold cross validation
@@ -74,7 +76,7 @@ def start(filename, class_ids, test_instances, fold):
             data = line[:-1].split(',')
             test.append(data)
 
-    cross_validation(fold, train)
+    # cross_validation(fold, train)
     '''
     # Use this code for CV using sklearn liabrary
     trainX = np.array(train[1:]).transpose()
@@ -93,13 +95,12 @@ def start(filename, class_ids, test_instances, fold):
 
 if __name__ == "__main__":
 
-    # filename = input("Enter filename: ")
     filename = "HandWrittenLetters.txt"
 
-    # class_ids = [1,2,3,4,5,6,7,8,9,10]
-    # class_ids = random.sample(range(1, 27), 5)
-    class_ids = [x for x in range(1, 11)]
+    student_id = [4, 5, 9, 1]                       # Student ID: 1001544591 ----- [4,5,9,1]
+    name_id = dh.letter_2_digit_convert('NTUR')     # Nishant Thakur         ----- [N,T,U,R] -> As 'T' was repeated replace it with 'U'
+    class_ids = student_id + name_id                # [4, 5, 9, 1, 14, 20, 21, 18]
     print("For class:", class_ids)
-    test_instances = [30,38]
+    test_instances = [0, 9]
 
     start(filename, class_ids, test_instances, fold = 5)
