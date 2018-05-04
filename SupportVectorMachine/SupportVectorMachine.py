@@ -91,8 +91,6 @@ def start(filename, class_ids, test_instances, fold):
     return accuracy
 
 
-
-
 if __name__ == "__main__":
 
     filename = "HandWrittenLetters.txt"
