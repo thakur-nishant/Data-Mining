@@ -79,8 +79,7 @@ def f_test(raw_data):
 
     print(top_feature_scores)
 
-
-
+    return top_feature_numbers,top_feature_scores
 
 
 if __name__ == '__main__':
