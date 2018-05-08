@@ -23,9 +23,9 @@ def calculate_f_statistic(data, g_avg, pool_variance):
         sum += data[key]['length']*(data[key]['average'] - g_avg)**2
         k += 1
 
-    # if k-1 == 0 or pool_variance == 0:
-    #     print(k,pool_variance)
-    #     print(data)
+    if pool_variance == 0:
+        return np.inf
+
     return (sum/(k-1))/pool_variance
 
 
@@ -59,26 +59,22 @@ def f_test(raw_data):
             row_summary[id]['length'] = len(class_data)
             row_summary[id]['average'] = calculate_average(class_data)
             row_summary[id]['variance'] = calculate_variance(class_data)
-            # if row_summary[id]['variance'] == 0:
-            #     print(class_data)
 
-        # print(row_summary)
         pool_variance = calculate_pool_variance(row_summary)
         row_average = calculate_average(row)
         F_score = calculate_f_statistic(row_summary, row_average, pool_variance)
         F_test_scores.append(F_score)
-        # print(F_score)
 
-    # print(F_test_scores)
+    print(F_test_scores)
+    # call select_feature function to select top 100 features from all the given features
     top_feature_numbers = sorted(select_feature(100, F_test_scores))
 
-    print(top_feature_numbers)
     top_feature_scores=[]
     for i in top_feature_numbers:
         top_feature_scores.append(F_test_scores[i])
 
-    print(top_feature_scores)
-
+    for i in top_feature_numbers:
+        print(i,F_test_scores[i])
     return top_feature_numbers,top_feature_scores
 
 
@@ -88,8 +84,5 @@ if __name__ == '__main__':
     raw_data = get_data(file_name)
 
     f_test(raw_data)
-
-
-
 
 
