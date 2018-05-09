@@ -16,7 +16,6 @@ def predict(filename, k):
     kmeans = KMeans(n_clusters=k)
     kmeans.fit(X)
     Kmeans_labels = kmeans.labels_
-
     C = confusion_matrix(Y, Kmeans_labels)
     C = C.T
     ind = linear_assignment(-C)

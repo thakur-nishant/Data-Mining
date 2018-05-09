@@ -22,10 +22,8 @@ def calculate_f_statistic(data, g_avg, pool_variance):
     for key in data:
         sum += data[key]['length']*(data[key]['average'] - g_avg)**2
         k += 1
-
-    if pool_variance == 0:
-        return np.inf
-
+    if k-1 == 0 or pool_variance == 0:
+          return(np.inf)
     return (sum/(k-1))/pool_variance
 
 
@@ -59,30 +57,37 @@ def f_test(raw_data):
             row_summary[id]['length'] = len(class_data)
             row_summary[id]['average'] = calculate_average(class_data)
             row_summary[id]['variance'] = calculate_variance(class_data)
+            # if row_summary[id]['variance'] == 0:
+            #     print(class_data)
 
+        # print(row_summary)
         pool_variance = calculate_pool_variance(row_summary)
         row_average = calculate_average(row)
         F_score = calculate_f_statistic(row_summary, row_average, pool_variance)
         F_test_scores.append(F_score)
+        # print(F_score)
 
-    print(F_test_scores)
-    # call select_feature function to select top 100 features from all the given features
-    top_feature_numbers = sorted(select_feature(100, F_test_scores))
+    # print(F_test_scores)
+    top_feature_numbers = select_feature(100, F_test_scores)
 
     top_feature_scores=[]
     for i in top_feature_numbers:
-        top_feature_scores.append(F_test_scores[i])
+        top_feature_scores.append([F_test_scores[i],i])
 
-    for i in top_feature_numbers:
-        print(i,F_test_scores[i])
-    return top_feature_numbers,top_feature_scores
+    top_feature_scores = (sorted(top_feature_scores)[::-1])
+    return top_feature_scores,F_test_scores
 
+def print_scores(top_feature_numbers,F_test_scores):
+        for i in top_feature_numbers:
+            print(i)
 
 if __name__ == '__main__':
-    test = [[1,1,1,1,2,1,1,2,1,2],[125,100,70,120,95,60,220,85,75,90]]
-    file_name = 'GenomeTrainXY.txt'
+#    test = [[1,1,1,1,2,1,1,2,1,2],[125,100,70,120,95,60,220,85,75,90]]
+    file_name = 'HandWrittenLetters.txt'
     raw_data = get_data(file_name)
+    features, scores = f_test(raw_data)
+    print_scores(features, scores)
 
-    f_test(raw_data)
+
 
 
